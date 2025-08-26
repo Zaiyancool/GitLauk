@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'auth.dart';
 
 void main() {
   runApp(CampusSafetyApp());
 }
+
+
 
 class CampusSafetyApp extends StatelessWidget {
   @override
