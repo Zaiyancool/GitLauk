@@ -9,6 +9,10 @@ import 'package:flutter_application_1/auth_pages/authPage.dart';
 
 import 'package:flutter_application_1/comp_manager/TextFileMng.dart';
 import 'package:flutter_application_1/comp_manager/ButtonMng.dart';
+import 'package:flutter_map/flutter_map.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_map/flutter_map.dart';
+import 'package:latlong2/latlong.dart';
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
@@ -126,69 +130,98 @@ void signOut() {
 // }
 
 // ================= Home Screen =================
-class HomeScreen extends StatelessWidget {
-  HomeScreen({super.key});
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
 
-  final user = FirebaseAuth.instance.currentUser!;
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
 
+class _HomeScreenState extends State<HomeScreen> {
+  // Simulated user locations around USM Penang
+  final List<LatLng> userPoints = [
+    LatLng(5.3414, 100.2850),
+    LatLng(5.3420, 100.2845),
+    LatLng(5.3408, 100.2840),
+    LatLng(5.3418, 100.2860),
+    LatLng(5.3410, 100.2855),
+  ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Campus Safety'),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.logout),
-            onPressed: () {
-              signOut();
-            },
+      appBar: AppBar(title: Text('Campus Safety')),
+      body: Column(
+        children: [
+          // Top Half: Map
+          Expanded(
+            flex: 1,
+            child: FlutterMap(
+              options: MapOptions(
+                center: LatLng(5.3414, 100.2850), // USM Penang center
+                zoom: 17.0, // higher zoom to see the campus clearly
+                maxZoom: 19.0,
+                minZoom: 14.0,
+              ),
+              children: [
+                TileLayer(
+                  urlTemplate: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                  subdomains: ['a', 'b', 'c'],
+                  userAgentPackageName: 'com.example.flutter_application_1',
+                ),
+                MarkerLayer(
+                  markers: userPoints.map((point) {
+                    return Marker(
+                      width: 30,
+                      height: 30,
+                      point: point,
+                      builder: (ctx) => Container(
+                        decoration: BoxDecoration(
+                          color: Colors.red.withOpacity(0.7),
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                    );
+                  }).toList(),
+                ),
+              ],
+            ),
+          ),
+
+          // Bottom Half: Buttons
+          Expanded(
+            flex: 1,
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.red,
+                      minimumSize: Size(150, 150),
+                      shape: CircleBorder(),
+                    ),
+                    onPressed: () {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('SOS Sent!')),
+                      );
+                    },
+                    child: Text('SOS', style: TextStyle(fontSize: 24)),
+                  ),
+                  SizedBox(height: 20),
+                  ElevatedButton(
+                    onPressed: () {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('Report Incident Clicked')),
+                      );
+                    },
+                    child: Text('Report Incident'),
+                  ),
+                ],
+              ),
+            ),
           ),
         ],
-      ),
-      
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            
-            SizedBox(height: 20),
-            Text(
-              "Hello " + user.email!,
-               style: TextStyle(fontSize: 20),
-            ),
-
-            SizedBox(height: 40),
-
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.red,
-                  minimumSize: Size(150, 150),
-                  shape: CircleBorder()),
-              onPressed: () {
-                ScaffoldMessenger.of(context)
-                    .showSnackBar(SnackBar(content: Text('SOS Sent!')));
-              },
-              child: Text('SOS', style: TextStyle(fontSize: 24)),
-            ),
-            SizedBox(height: 40),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                    context, MaterialPageRoute(builder: (_) => ReportScreen()));
-              },
-              child: Text('Report Incident'),
-            ),
-            SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                    context, MaterialPageRoute(builder: (_) => HeatmapScreen()));
-              },
-              child: Text('View Heatmap'),
-            ),
-          ],
-        ),
       ),
     );
   }
