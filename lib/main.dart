@@ -138,7 +138,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  // Simulated user locations around USM Penang
   final List<LatLng> userPoints = [
     LatLng(5.3414, 100.2850),
     LatLng(5.3420, 100.2845),
@@ -150,7 +149,47 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Campus Safety')),
+appBar: AppBar(
+  title: Text('Campus Safety'),
+  actions: [
+    IconButton(
+      icon: Icon(Icons.logout),
+      onPressed: () async {
+        final shouldLogout = await showDialog<bool>(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text("Sign Out"),
+            content: Text("Are you sure you want to sign out?"),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context, false),
+                child: Text("Cancel"),
+              ),
+              ElevatedButton(
+                onPressed: () => Navigator.pop(context, true),
+                child: Text("Sign Out"),
+              ),
+            ],
+          ),
+        );
+
+        if (shouldLogout == true) {
+          await FirebaseAuth.instance.signOut();
+
+          // Show feedback before navigating away
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Signed out successfully')),
+          );
+
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (_) => AuthPage()),
+          );
+        }
+      },
+    ),
+  ],
+),
       body: Column(
         children: [
           // Top Half: Map
@@ -158,14 +197,15 @@ class _HomeScreenState extends State<HomeScreen> {
             flex: 1,
             child: FlutterMap(
               options: MapOptions(
-                center: LatLng(5.3414, 100.2850), // USM Penang center
-                zoom: 17.0, // higher zoom to see the campus clearly
+                center: LatLng(5.3414, 100.2850),
+                zoom: 17.0,
                 maxZoom: 19.0,
                 minZoom: 14.0,
               ),
               children: [
                 TileLayer(
-                  urlTemplate: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                  urlTemplate:
+                      "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
                   subdomains: ['a', 'b', 'c'],
                   userAgentPackageName: 'com.example.flutter_application_1',
                 ),
@@ -211,8 +251,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   SizedBox(height: 20),
                   ElevatedButton(
                     onPressed: () {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('Report Incident Clicked')),
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => ReportScreen()),
                       );
                     },
                     child: Text('Report Incident'),
@@ -226,7 +267,6 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 }
-
 // ================= Report Screen =================
 class ReportScreen extends StatelessWidget {
   final TextEditingController reportCtrl = TextEditingController();
@@ -256,7 +296,9 @@ class ReportScreen extends StatelessWidget {
             ElevatedButton(
               onPressed: () {
                 ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Report submitted: ${reportCtrl.text}')));
+                  SnackBar(content: Text('Report submitted: ${reportCtrl.text}')),
+                );
+                Navigator.pop(context); // go back to HomeScreen after submit
               },
               child: Text('Submit Report'),
             ),
