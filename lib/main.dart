@@ -10,9 +10,8 @@ import 'package:flutter_application_1/auth_pages/authPage.dart';
 import 'package:flutter_application_1/comp_manager/TextFileMng.dart';
 import 'package:flutter_application_1/comp_manager/ButtonMng.dart';
 import 'package:flutter_map/flutter_map.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
@@ -146,45 +145,85 @@ class _HomeScreenState extends State<HomeScreen> {
     LatLng(5.3410, 100.2855),
   ];
 
+  String userName = '';
+
+  @override
+  void initState() {
+    super.initState();
+    fetchUserName();
+  }
+
+  Future<void> fetchUserName() async {
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        final doc = await FirebaseFirestore.instance
+            .collection('users')
+            .doc(user.uid)
+            .get();
+
+        if (doc.exists) {
+          setState(() {
+            userName = doc.data()?['name'] ?? '';
+          });
+        }
+      }
+    } catch (e) {
+      print("Error fetching user name: $e");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-appBar: AppBar(
-  title: Text('Campus Safety'),
+      appBar: AppBar(
+  title: Row(
+    children: [
+      // Username on the left
+      Container(
+        constraints: BoxConstraints(
+          maxWidth: MediaQuery.of(context).size.width * 0.4,
+        ),
+        child: Text(
+          'Hello, $userName',
+          style: const TextStyle(fontSize: 14),
+          overflow: TextOverflow.ellipsis,
+        ),
+      ),
+      const Spacer(), // pushes the title to center
+      const Text(
+        'Campus Safety',
+        style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+      ),
+      const Spacer(flex: 2), // keeps the title centered with space for logout button
+    ],
+  ),
   actions: [
     IconButton(
-      icon: Icon(Icons.logout),
+      icon: const Icon(Icons.logout),
       onPressed: () async {
         final shouldLogout = await showDialog<bool>(
           context: context,
           builder: (context) => AlertDialog(
-            title: Text("Sign Out"),
-            content: Text("Are you sure you want to sign out?"),
+            title: const Text("Sign Out"),
+            content: const Text("Are you sure you want to sign out?"),
             actions: [
               TextButton(
-                onPressed: () => Navigator.pop(context, false),
-                child: Text("Cancel"),
-              ),
+                  onPressed: () => Navigator.pop(context, false),
+                  child: const Text("Cancel")),
               ElevatedButton(
-                onPressed: () => Navigator.pop(context, true),
-                child: Text("Sign Out"),
-              ),
+                  onPressed: () => Navigator.pop(context, true),
+                  child: const Text("Sign Out")),
             ],
           ),
         );
 
         if (shouldLogout == true) {
           await FirebaseAuth.instance.signOut();
-
-          // Show feedback before navigating away
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Signed out successfully')),
-          );
-
+              const SnackBar(content: Text('Signed out successfully')));
           Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (_) => AuthPage()),
-          );
+              context, MaterialPageRoute(builder: (_) => AuthPage()));
         }
       },
     ),
@@ -227,7 +266,6 @@ appBar: AppBar(
               ],
             ),
           ),
-
           // Bottom Half: Buttons
           Expanded(
             flex: 1,
@@ -238,17 +276,17 @@ appBar: AppBar(
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.red,
-                      minimumSize: Size(150, 150),
-                      shape: CircleBorder(),
+                      minimumSize: const Size(150, 150),
+                      shape: const CircleBorder(),
                     ),
                     onPressed: () {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('SOS Sent!')),
+                        const SnackBar(content: Text('SOS Sent!')),
                       );
                     },
-                    child: Text('SOS', style: TextStyle(fontSize: 24)),
+                    child: const Text('SOS', style: TextStyle(fontSize: 24)),
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   ElevatedButton(
                     onPressed: () {
                       Navigator.push(
@@ -256,7 +294,7 @@ appBar: AppBar(
                         MaterialPageRoute(builder: (_) => ReportScreen()),
                       );
                     },
-                    child: Text('Report Incident'),
+                    child: const Text('Report Incident'),
                   ),
                 ],
               ),
