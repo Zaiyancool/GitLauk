@@ -12,6 +12,7 @@ import 'package:flutter_application_1/comp_manager/ButtonMng.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_application_1/heatmap/heatmap_screen.dart';
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
@@ -137,14 +138,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final List<LatLng> userPoints = [
-    LatLng(5.3414, 100.2850),
-    LatLng(5.3420, 100.2845),
-    LatLng(5.3408, 100.2840),
-    LatLng(5.3418, 100.2860),
-    LatLng(5.3410, 100.2855),
-  ];
-
   String userName = '';
 
   @override
@@ -177,95 +170,65 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-  title: Row(
-    children: [
-      // Username on the left
-      Container(
-        constraints: BoxConstraints(
-          maxWidth: MediaQuery.of(context).size.width * 0.4,
+        title: Row(
+          children: [
+            Container(
+              constraints: BoxConstraints(
+                maxWidth: MediaQuery.of(context).size.width * 0.4,
+              ),
+              child: Text(
+                'Hello, $userName',
+                style: const TextStyle(fontSize: 14),
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+            const Spacer(),
+            const Text(
+              'Campus Safety',
+              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+            ),
+            const Spacer(flex: 2),
+          ],
         ),
-        child: Text(
-          'Hello, $userName',
-          style: const TextStyle(fontSize: 14),
-          overflow: TextOverflow.ellipsis,
-        ),
-      ),
-      const Spacer(), // pushes the title to center
-      const Text(
-        'Campus Safety',
-        style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-      ),
-      const Spacer(flex: 2), // keeps the title centered with space for logout button
-    ],
-  ),
-  actions: [
-    IconButton(
-      icon: const Icon(Icons.logout),
-      onPressed: () async {
-        final shouldLogout = await showDialog<bool>(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: const Text("Sign Out"),
-            content: const Text("Are you sure you want to sign out?"),
-            actions: [
-              TextButton(
-                  onPressed: () => Navigator.pop(context, false),
-                  child: const Text("Cancel")),
-              ElevatedButton(
-                  onPressed: () => Navigator.pop(context, true),
-                  child: const Text("Sign Out")),
-            ],
-          ),
-        );
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.logout),
+            onPressed: () async {
+              final shouldLogout = await showDialog<bool>(
+                context: context,
+                builder: (context) => AlertDialog(
+                  title: const Text("Sign Out"),
+                  content: const Text("Are you sure you want to sign out?"),
+                  actions: [
+                    TextButton(
+                        onPressed: () => Navigator.pop(context, false),
+                        child: const Text("Cancel")),
+                    ElevatedButton(
+                        onPressed: () => Navigator.pop(context, true),
+                        child: const Text("Sign Out")),
+                  ],
+                ),
+              );
 
-        if (shouldLogout == true) {
-          await FirebaseAuth.instance.signOut();
-          ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Signed out successfully')));
-          Navigator.pushReplacement(
-              context, MaterialPageRoute(builder: (_) => AuthPage()));
-        }
-      },
-    ),
-  ],
-),
+              if (shouldLogout == true) {
+                await FirebaseAuth.instance.signOut();
+                ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Signed out successfully')));
+                Navigator.pushReplacement(
+                    context, MaterialPageRoute(builder: (_) => AuthPage()));
+              }
+            },
+          ),
+        ],
+      ),
       body: Column(
         children: [
-          // Top Half: Map
+          // 🔥 Heatmap from other file
           Expanded(
             flex: 1,
-            child: FlutterMap(
-              options: MapOptions(
-                center: LatLng(5.3414, 100.2850),
-                zoom: 17.0,
-                maxZoom: 19.0,
-                minZoom: 14.0,
-              ),
-              children: [
-                TileLayer(
-                  urlTemplate:
-                      "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-                  subdomains: ['a', 'b', 'c'],
-                  userAgentPackageName: 'com.example.flutter_application_1',
-                ),
-                MarkerLayer(
-                  markers: userPoints.map((point) {
-                    return Marker(
-                      width: 30,
-                      height: 30,
-                      point: point,
-                      builder: (ctx) => Container(
-                        decoration: BoxDecoration(
-                          color: Colors.red.withOpacity(0.7),
-                          shape: BoxShape.circle,
-                        ),
-                      ),
-                    );
-                  }).toList(),
-                ),
-              ],
-            ),
+            child: HeatmapScreen(),
           ),
+
           // Bottom Half: Buttons
           Expanded(
             flex: 1,
@@ -342,20 +305,6 @@ class ReportScreen extends StatelessWidget {
             ),
           ],
         ),
-      ),
-    );
-  }
-}
-
-// ================= Heatmap Screen =================
-class HeatmapScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    // For hackathon demo, we’ll just show placeholder
-    return Scaffold(
-      appBar: AppBar(title: Text('Heatmap')),
-      body: Center(
-        child: Text('Heatmap will appear here', style: TextStyle(fontSize: 24)),
       ),
     );
   }
