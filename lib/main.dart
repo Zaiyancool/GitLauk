@@ -9,6 +9,9 @@ import 'package:flutter_application_1/auth_pages/authPage.dart';
 
 import 'package:flutter_application_1/comp_manager/TextFileMng.dart';
 import 'package:flutter_application_1/comp_manager/ButtonMng.dart';
+
+import 'report_pages/report_screen.dart';
+
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -39,94 +42,6 @@ class CampusSafetyApp extends StatelessWidget {
 void signOut() {
   FirebaseAuth.instance.signOut();
 }
-
-// ================= Login Screen =================
-// class LoginScreen extends StatelessWidget {
-//   final TextEditingController emailCtrl = TextEditingController();
-//   final TextEditingController passCtrl = TextEditingController();
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       body: Padding(
-//         padding: EdgeInsets.all(24),
-//         child: Column(
-//           mainAxisAlignment: MainAxisAlignment.center,
-//           children: [
-//             Text('Campus Safety', style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold)),
-//             SizedBox(height: 40),
-//             TextField(
-//               controller: emailCtrl,
-//               decoration: InputDecoration(labelText: 'Email'),
-//             ),
-//             SizedBox(height: 16),
-//             TextField(
-//               controller: passCtrl,
-//               obscureText: true,
-//               decoration: InputDecoration(labelText: 'Password'),
-//             ),
-//             SizedBox(height: 32),
-//             ElevatedButton(
-//               onPressed: () {
-//                 Navigator.pushReplacement(
-//                     context, MaterialPageRoute(builder: (_) => HomeScreen()));
-//               },
-//               child: Text('Login'),
-//             ),
-//             SizedBox(height: 16),
-//             TextButton(
-//               onPressed: () {
-//                 Navigator.push(
-//                     context, MaterialPageRoute(builder: (_) => SignupScreen()));
-//               },
-//               child: Text('Sign Up'),
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }
-
-// ================= Signup Screen =================
-
-// class SignupScreen extends StatelessWidget {
-//   final TextEditingController emailCtrl = TextEditingController();
-//   final TextEditingController passCtrl = TextEditingController();
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(title: Text('Sign Up')),
-//       body: Padding(
-//         padding: EdgeInsets.all(24),
-//         child: Column(
-//           mainAxisAlignment: MainAxisAlignment.center,
-//           children: [
-//             TextField(
-//               controller: emailCtrl,
-//               decoration: InputDecoration(labelText: 'email'),
-//             ),
-//             SizedBox(height: 16),
-//             TextField(
-//               controller: passCtrl,
-//               obscureText: true,
-//               decoration: InputDecoration(labelText: 'Password'),
-//             ),
-//             SizedBox(height: 32),
-//             ElevatedButton(
-//               onPressed: () {
-//                 Navigator.pushReplacement(
-//                     context, MaterialPageRoute(builder: (_) => HomeScreen()));
-//               },
-//               child: Text('Create Account'),
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }
 
 // ================= Home Screen =================
 class HomeScreen extends StatefulWidget {
@@ -184,12 +99,15 @@ class _HomeScreenState extends State<HomeScreen> {
         constraints: BoxConstraints(
           maxWidth: MediaQuery.of(context).size.width * 0.4,
         ),
+
         child: Text(
           'Hello, $userName',
           style: const TextStyle(fontSize: 14),
           overflow: TextOverflow.ellipsis,
         ),
+
       ),
+
       const Spacer(), // pushes the title to center
       const Text(
         'Campus Safety',
@@ -266,6 +184,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             ),
           ),
+
           // Bottom Half: Buttons
           Expanded(
             flex: 1,
@@ -279,6 +198,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       minimumSize: const Size(150, 150),
                       shape: const CircleBorder(),
                     ),
+
                     onPressed: () {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(content: Text('SOS Sent!')),
@@ -286,6 +206,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     },
                     child: const Text('SOS', style: TextStyle(fontSize: 24)),
                   ),
+
                   const SizedBox(height: 20),
                   ElevatedButton(
                     onPressed: () {
@@ -306,46 +227,48 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 // ================= Report Screen =================
-class ReportScreen extends StatelessWidget {
-  final TextEditingController reportCtrl = TextEditingController();
-  String category = "Suspicious";
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('Report Incident')),
-      body: Padding(
-        padding: EdgeInsets.all(24),
-        child: Column(
-          children: [
-            DropdownButton<String>(
-              value: category,
-              items: ["Suspicious", "Harassment", "Theft"].map((e) {
-                return DropdownMenuItem(value: e, child: Text(e));
-              }).toList(),
-              onChanged: (val) {},
-            ),
-            SizedBox(height: 16),
-            TextField(
-              controller: reportCtrl,
-              decoration: InputDecoration(labelText: "Describe incident"),
-            ),
-            SizedBox(height: 32),
-            ElevatedButton(
-              onPressed: () {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('Report submitted: ${reportCtrl.text}')),
-                );
-                Navigator.pop(context); // go back to HomeScreen after submit
-              },
-              child: Text('Submit Report'),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
+
+// class ReportScreen extends StatelessWidget {
+//   final TextEditingController reportCtrl = TextEditingController();
+//   String category = "Suspicious";
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(title: Text('Report Incident')),
+//       body: Padding(
+//         padding: EdgeInsets.all(24),
+//         child: Column(
+//           children: [
+//             DropdownButton<String>(
+//               value: category,
+//               items: ["Suspicious", "Harassment", "Theft"].map((e) {
+//                 return DropdownMenuItem(value: e, child: Text(e));
+//               }).toList(),
+//               onChanged: (val) {},
+//             ),
+//             SizedBox(height: 16),
+//             TextField(
+//               controller: reportCtrl,
+//               decoration: InputDecoration(labelText: "Describe incident"),
+//             ),
+//             SizedBox(height: 32),
+//             ElevatedButton(
+//               onPressed: () {
+//                 ScaffoldMessenger.of(context).showSnackBar(
+//                   SnackBar(content: Text('Report submitted: ${reportCtrl.text}')),
+//                 );
+//                 Navigator.pop(context); // go back to HomeScreen after submit
+//               },
+//               child: Text('Submit Report'),
+//             ),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+// }
 
 // ================= Heatmap Screen =================
 class HeatmapScreen extends StatelessWidget {

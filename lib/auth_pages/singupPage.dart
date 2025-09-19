@@ -52,7 +52,9 @@ class _SignupScreenState extends State<SignupScreen> {
 
       setState(() => isLoading = false);
       _showSuccessDialog();
-    } on FirebaseAuthException catch (e) {
+    } 
+    
+    on FirebaseAuthException catch (e) {
       setState(() => isLoading = false);
       if (e.code == 'password-not-matched') {
         _showErrorDialog('Passwords do not match');
