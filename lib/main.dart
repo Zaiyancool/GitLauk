@@ -54,6 +54,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   String userName = '';
+  List<LatLng> userPoints = []; // Declaration of missing userPoints
 
   @override
   void initState() {
@@ -156,6 +157,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   subdomains: ['a', 'b', 'c'],
                   userAgentPackageName: 'com.example.flutter_application_1',
                 ),
+
                 MarkerLayer(
                   markers: userPoints.map((point) {
                     return Marker(
@@ -170,6 +172,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     );
                   }).toList(),
+
                 ),
               ],
             ),
