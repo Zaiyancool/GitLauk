@@ -15,6 +15,7 @@ import 'report_pages/report_screen.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_application_1/heatmap/heatmap_screen.dart';
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
@@ -52,14 +53,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final List<LatLng> userPoints = [
-    LatLng(5.3414, 100.2850),
-    LatLng(5.3420, 100.2845),
-    LatLng(5.3408, 100.2840),
-    LatLng(5.3418, 100.2860),
-    LatLng(5.3410, 100.2855),
-  ];
-
   String userName = '';
 
   @override
@@ -99,15 +92,12 @@ class _HomeScreenState extends State<HomeScreen> {
         constraints: BoxConstraints(
           maxWidth: MediaQuery.of(context).size.width * 0.4,
         ),
-
         child: Text(
           'Hello, $userName',
           style: const TextStyle(fontSize: 14),
           overflow: TextOverflow.ellipsis,
         ),
-
       ),
-
       const Spacer(), // pushes the title to center
       const Text(
         'Campus Safety',
@@ -136,20 +126,20 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         );
 
-        if (shouldLogout == true) {
-          await FirebaseAuth.instance.signOut();
-          ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Signed out successfully')));
-          Navigator.pushReplacement(
-              context, MaterialPageRoute(builder: (_) => AuthPage()));
-        }
-      },
-    ),
-  ],
-),
+              if (shouldLogout == true) {
+                await FirebaseAuth.instance.signOut();
+                ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Signed out successfully')));
+                Navigator.pushReplacement(
+                    context, MaterialPageRoute(builder: (_) => AuthPage()));
+              }
+            },
+          ),
+        ],
+      ),
       body: Column(
         children: [
-          // Top Half: Map
+          // 🔥 Heatmap from other file
           Expanded(
             flex: 1,
             child: FlutterMap(
@@ -184,7 +174,6 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             ),
           ),
-
           // Bottom Half: Buttons
           Expanded(
             flex: 1,
@@ -269,17 +258,3 @@ class _HomeScreenState extends State<HomeScreen> {
 //     );
 //   }
 // }
-
-// ================= Heatmap Screen =================
-class HeatmapScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    // For hackathon demo, we’ll just show placeholder
-    return Scaffold(
-      appBar: AppBar(title: Text('Heatmap')),
-      body: Center(
-        child: Text('Heatmap will appear here', style: TextStyle(fontSize: 24)),
-      ),
-    );
-  }
-}
