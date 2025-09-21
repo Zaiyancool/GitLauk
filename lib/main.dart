@@ -142,77 +142,92 @@ class _HomeScreenState extends State<HomeScreen> {
         children: [
           // 🔥 Heatmap from other file
           Expanded(
-            flex: 1,
-            child: FlutterMap(
-              options: MapOptions(
-                center: LatLng(5.3414, 100.2850),
-                zoom: 17.0,
-                maxZoom: 19.0,
-                minZoom: 14.0,
-              ),
-              children: [
-                TileLayer(
-                  urlTemplate:
-                      "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-                  subdomains: ['a', 'b', 'c'],
-                  userAgentPackageName: 'com.example.flutter_application_1',
-                ),
-
-                MarkerLayer(
-                  markers: userPoints.map((point) {
-                    return Marker(
-                      width: 30,
-                      height: 30,
-                      point: point,
-                      builder: (ctx) => Container(
-                        decoration: BoxDecoration(
-                          color: Colors.red.withOpacity(0.7),
-                          shape: BoxShape.circle,
-                        ),
-                      ),
-                    );
-                  }).toList(),
-
-                ),
-              ],
-            ),
-          ),
+  flex: 1,
+  child: HeatmapScreen(),
+),
           // Bottom Half: Buttons
-          Expanded(
-            flex: 1,
-            child: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.red,
-                      minimumSize: const Size(150, 150),
-                      shape: const CircleBorder(),
-                    ),
-
-                    onPressed: () {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('SOS Sent!')),
-                      );
-                    },
-                    child: const Text('SOS', style: TextStyle(fontSize: 24)),
-                  ),
-
-                  const SizedBox(height: 20),
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (_) => ReportScreen()),
-                      );
-                    },
-                    child: const Text('Report Incident'),
-                  ),
-                ],
-              ),
-            ),
+Expanded(
+  flex: 1,
+  child: Center(
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        // SOS button
+        ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.red,
+            minimumSize: const Size(150, 150),
+            shape: const CircleBorder(),
           ),
+          onPressed: () {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('SOS Sent!')),
+            );
+          },
+          child: const Text('SOS', style: TextStyle(fontSize: 24)),
+        ),
+
+        const SizedBox(height: 30),
+
+        // Three-button row: Left, Report Incident, Right
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            // Left placeholder button
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.white,
+                padding: const EdgeInsets.all(15), // adjust size
+                shape: const CircleBorder(), // makes it circular
+              ),
+              onPressed: () {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Left button pressed')),
+                );
+              },
+              child: const Icon(Icons.map, color: Colors.deepPurple, size: 25),
+            ),
+
+            const SizedBox(width: 20),
+
+            // Center Report Incident button
+            ElevatedButton.icon(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.redAccent,
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+              ),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => ReportScreen()),
+                );
+              },
+              icon: const Icon(Icons.report),
+              label: const Text('Report Incident'),
+            ),
+
+            const SizedBox(width: 20),
+
+            // Right placeholder button
+                        ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.white,
+                padding: const EdgeInsets.all(15), // adjust size
+                shape: const CircleBorder(), // makes it circular
+              ),
+              onPressed: () {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Right button pressed')),
+                );
+              },
+              child: const Icon(Icons.chat, color: Colors.purple, size: 25),
+            ),
+          ],
+        ),
+      ],
+    ),
+  ),
+),
         ],
       ),
     );
