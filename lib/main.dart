@@ -11,6 +11,7 @@ import 'package:flutter_application_1/comp_manager/TextFileMng.dart';
 import 'package:flutter_application_1/comp_manager/ButtonMng.dart';
 
 import 'report_pages/report_screen.dart';
+import 'report_pages/report_list_screen.dart';
 
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
@@ -78,7 +79,7 @@ class _HomeScreenState extends State<HomeScreen> {
         }
       }
     } catch (e) {
-      print("Error fetching user name: $e");
+      debugPrint("Error fetching user name: $e");
     }
   }
 
@@ -181,8 +182,9 @@ Expanded(
                 shape: const CircleBorder(), // makes it circular
               ),
               onPressed: () {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Left button pressed')),
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => ReportListScreen()),
                 );
               },
               child: const Icon(Icons.map, color: Colors.deepPurple, size: 25),
