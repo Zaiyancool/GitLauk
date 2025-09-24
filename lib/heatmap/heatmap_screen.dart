@@ -40,6 +40,10 @@ class _HeatmapScreenState extends State<HeatmapScreen> {
               MarkerLayer(
                 markers: reports.map((doc) {
                   final data = doc.data() as Map<String, dynamic>;
+
+                  // Only show markers for Pending reports
+                  if (data['Status'] != 'Pending') return null;
+
                   final geoPoint = data['GeoPoint'] as GeoPoint?;
                   if (geoPoint == null) return null;
 

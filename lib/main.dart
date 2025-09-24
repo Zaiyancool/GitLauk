@@ -17,6 +17,8 @@ import 'package:latlong2/latlong.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_application_1/heatmap/heatmap_screen.dart';
 
+import 'sos_button/sos_button.dart';
+
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
@@ -153,19 +155,8 @@ Expanded(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         // SOS button
-        ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.red,
-            minimumSize: const Size(150, 150),
-            shape: const CircleBorder(),
-          ),
-          onPressed: () {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('SOS Sent!')),
-            );
-          },
-          child: const Text('SOS', style: TextStyle(fontSize: 24)),
-        ),
+
+         const SOSButton(),
 
         const SizedBox(height: 30),
 
@@ -204,23 +195,9 @@ Expanded(
               },
               icon: const Icon(Icons.report),
               label: const Text('Report Incident'),
-            ),
+      
 
-            const SizedBox(width: 20),
-
-            // Right placeholder button
-                        ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.white,
-                padding: const EdgeInsets.all(15), // adjust size
-                shape: const CircleBorder(), // makes it circular
-              ),
-              onPressed: () {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Right button pressed')),
-                );
-              },
-              child: const Icon(Icons.chat, color: Colors.purple, size: 25),
+            
             ),
           ],
         ),
