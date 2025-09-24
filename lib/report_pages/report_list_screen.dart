@@ -5,7 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:flutter_application_1/comp_manager/TextFileMng.dart';
 import 'package:flutter_application_1/comp_manager/ButtonMng.dart';
-import 'package:flutter_application_1/comp_manager/TypeReportCounter.dart';
+import 'package:flutter_application_1/comp_manager/WriteMng/TypeReportCounter.dart';
 import 'package:flutter_application_1/comp_manager/ReportBlock.dart';
 
 import 'package:flutter_application_1/comp_manager/FetchMng/FetchLocation.dart';
@@ -16,14 +16,6 @@ class ReportListScreen extends StatefulWidget {
 
   const ReportListScreen({super.key});
 
-  // final List reports = [
-  //   {
-  //     'title': 'Report 1',
-  //     'description': 'Description of Report 1, let see how it looks like when the text is really long. This should ideally wrap around to the next line and demonstrate the text wrapping functionality in Flutter., how long can this go?, hopefully not too long, it should be fine. huh how about now?, right this is getting a bit excessive but still good to test.',
-  //     'date': '2023-10-01',
-  //   },
-  // ];
-
   @override
   State<ReportListScreen> createState() => _ReportListScreenState();
 }
@@ -31,29 +23,6 @@ class ReportListScreen extends StatefulWidget {
 class _ReportListScreenState extends State<ReportListScreen> {
 
   Future<List<ReportDetails>> futureReports = fetchReports();
-
-
-  // @override
-  // Widget build(BuildContext context) {
-  //   return Scaffold(
-  //     appBar: AppBar(
-  //       title: Text('Report List'),
-  //       //backgroundColor: Colors.grey[900],
-  //     ),
-
-  //     body: ListView.builder(
-  //       itemCount: widget.reports.length,
-  //       itemBuilder: (context, index) {
-  //         final report = widget.reports[index];
-  //         return ReportBlock(
-  //           title: report['title'],
-  //           description: report['description'],
-  //           date: report['date'],
-  //         );
-  //       },
-  //   ),
-  // );
-  // }
 
     @override
   Widget build(BuildContext context) {
@@ -91,6 +60,7 @@ class _ReportListScreenState extends State<ReportListScreen> {
 
                 return ReportBlock(
                   title: report.type,
+                  reportId: report.reportId,
                   description: report.description,
                   date: DateFormat('yyyy-MM-dd').format(report.timestamp),
                   time: DateFormat('HH:mm:ss').format(report.timestamp),

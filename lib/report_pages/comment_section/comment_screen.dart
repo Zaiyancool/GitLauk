@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+import 'package:flutter_application_1/comp_manager/WriteMng/CommentSubmit.dart';
 
 class CommentScreen extends StatefulWidget {
   final String reportId;
+  final String title;
 
   const CommentScreen({
     super.key,
     required this.reportId,
+    required this.title
 
   });
 
@@ -17,23 +22,12 @@ class _CommentScreenState extends State<CommentScreen> {
   final TextEditingController commentCtrl = TextEditingController();
   final List<String> comments = []; // Replace with Firestore stream later
 
-  void submitComment() {
-    final comment = commentCtrl.text.trim();
-    if (comment.isEmpty) return;
-
-    setState(() {
-      comments.add(comment); // Replace with Firestore write
-      commentCtrl.clear();
-    });
-
-    // TODO: Firestore logic to save comment under widget.reportId
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(' ${widget.reportId}'),
+        title: Text(' ${widget.title} (${widget.reportId})' ),
       ),
       body: Column(
         children: [
@@ -66,7 +60,9 @@ class _CommentScreenState extends State<CommentScreen> {
 
                 IconButton(
                   icon: const Icon(Icons.send),
-                  onPressed: submitComment,
+                  onPressed: ()  {
+                     submitComment(widget.reportId, commentCtrl.text.trim());
+                  }
                 ),
 
               ],

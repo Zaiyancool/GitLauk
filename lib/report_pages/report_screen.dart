@@ -5,7 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_application_1/comp_manager/TextFileMng.dart';
 import 'package:flutter_application_1/comp_manager/ButtonMng.dart';
 import 'package:flutter_application_1/comp_manager/FetchMng/FetchLocation.dart';
-import 'package:flutter_application_1/comp_manager/TypeReportCounter.dart';
+import 'package:flutter_application_1/comp_manager/WriteMng/TypeReportCounter.dart';
 
 class ReportScreen extends StatefulWidget {
 
