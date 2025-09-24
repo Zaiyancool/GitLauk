@@ -33,20 +33,6 @@ class ReportDetails {
   
 }
 
-// Future<List<ReportDetails>> fetchReports() async {
-//   final snapshot = await FirebaseFirestore.instance
-//       .collection('reports')
-//       .orderBy('time', descending: true)
-//       .get();
-
-//   debugPrint("Fetched ${snapshot.docs.length} reports");
-//     for (var doc in snapshot.docs) {
-//       debugPrint(doc.data());
-//     }
-
-//   return snapshot.docs.map((doc) => ReportDetails.fromFirestore(doc)).toList();
-// }
-
 Future<List<ReportDetails>> fetchReports() async {
   List<ReportDetails> reports = [];
 
