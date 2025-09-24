@@ -87,7 +87,7 @@ class _CommentScreenState extends State<CommentScreen> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(12.0),
+            padding: const EdgeInsets.fromLTRB(12.0, 12.0, 12.0, 55.0),
             child: Row(
               children: [
                 Expanded(
