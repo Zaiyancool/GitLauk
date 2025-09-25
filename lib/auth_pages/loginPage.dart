@@ -26,49 +26,80 @@ class _LoginScreenState extends State<LoginScreen> {
 
   final TextEditingController usernameCtrl = TextEditingController();
 
-  void SignUser() async{
+  Future<void> SignUser() async {
+  // Show loading indicator
+  showDialog(
+    context: context,
+    barrierDismissible: false,
+    builder: (context) => const Center(child: CircularProgressIndicator()),
+  );
 
-    //LOading circle
-    showDialog(
-      context: context,
-      builder: (context){
-        return const Center(child: CircularProgressIndicator(),);
-      }
+  try {
+    await FirebaseAuth.instance.signInWithEmailAndPassword(
+      email: emailCtrl.text,
+      password: passCtrl.text,
     );
 
-    //try sign in
-    try{
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: emailCtrl.text,
-        password: passCtrl.text,
-      );
+    if (mounted) Navigator.pop(context); // Close loading dialog
+  } on FirebaseAuthException catch (e) {
+    if (mounted) Navigator.pop(context); // Close loading dialog
 
-      //pop the loading circle
-      Navigator.pop(context);
-    }
-    on FirebaseAuthException catch (e){
-      
-      //pop the loading circle
-      Navigator.pop(context);
-
-      //wrong email (old)
-      if (e.code == 'user-not-found' ){
-        wrongEmailMessage();
-
-      }
-
-      //wrong password (old)
-      else if (e.code == 'wrong-password'){
-        wrongPassMessage();
-
-      } 
-      //other errors
-      else{
-        wrongCredentialMessage();
-      }
+    if (e.code == 'user-not-found') {
+      wrongEmailMessage();
+    } else if (e.code == 'wrong-password') {
+      wrongPassMessage();
+    } else {
+      wrongCredentialMessage();
     }
 
+    if (mounted) Navigator.pop(context); // Close loading dialog
   }
+}
+
+
+  // void SignUser() async{
+
+  //   //LOading circle
+  //   showDialog(
+  //     context: context,
+  //     builder: (context){
+  //       return const Center(child: CircularProgressIndicator(),);
+  //     }
+  //   );
+
+  //   //try sign in
+  //   try{
+  //     await FirebaseAuth.instance.signInWithEmailAndPassword(
+  //       email: emailCtrl.text,
+  //       password: passCtrl.text,
+  //     );
+
+  //     //pop the loading circle
+  //     Navigator.pop(context);
+  //   }
+  //   on FirebaseAuthException catch (e){
+      
+  //     //pop the loading circle
+  //     Navigator.pop(context);
+
+  //     //wrong email (old)
+  //     if (e.code == 'user-not-found' ){
+  //       wrongEmailMessage();
+
+  //     }
+
+  //     //wrong password (old)
+  //     else if (e.code == 'wrong-password'){
+  //       wrongPassMessage();
+
+  //     } 
+  //     //other errors
+  //     else{
+  //       wrongCredentialMessage();
+  //     }
+  //   }
+
+  // }
 
 void wrongCredentialMessage(){
     showDialog(

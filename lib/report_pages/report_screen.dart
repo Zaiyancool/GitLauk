@@ -4,8 +4,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:flutter_application_1/comp_manager/TextFileMng.dart';
 import 'package:flutter_application_1/comp_manager/ButtonMng.dart';
-import 'package:flutter_application_1/comp_manager/FetchLocation.dart';
-import 'package:flutter_application_1/comp_manager/TypeReportCounter.dart';
+import 'package:flutter_application_1/comp_manager/FetchMng/FetchLocation.dart';
+import 'package:flutter_application_1/comp_manager/WriteMng/TypeReportCounter.dart';
 
 class ReportScreen extends StatefulWidget {
 
@@ -122,7 +122,7 @@ class _ReportScreenState extends State<ReportScreen> {
         }
       }
        catch (e) {
-      print("Error fetching user name: $e");
+      debugPrint("Error fetching user name: $e");
     }
   return UserInfo(username: '', course: '');
 
@@ -133,7 +133,7 @@ class _ReportScreenState extends State<ReportScreen> {
    
    try {
     final locDetails = await getCurrentLocation();
-    print("Location fetched: $locDetails");
+    debugPrint("Location fetched: $locDetails");
 
     GeoPoint geoPoint = locDetails != null
         ? GeoPoint(locDetails.latitude, locDetails.longitude)
@@ -152,9 +152,9 @@ class _ReportScreenState extends State<ReportScreen> {
       "UserID": userId,
     });
 
-    print("Report submitted successfully.");
+    debugPrint("Report submitted successfully.");
   } catch (e) {
-    print("Error submitting report: $e");
+    debugPrint("Error submitting report: $e");
   } //nanti kene refine lagi
 }
 
