@@ -14,7 +14,7 @@ class _HeatmapScreenState extends State<HeatmapScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Heatmap")),
+      
       body: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance.collection('reports').snapshots(),
         builder: (context, snapshot) {

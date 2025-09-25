@@ -104,7 +104,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       const Spacer(), // pushes the title to center
       const Text(
-        'Campus Safety',
+        'Alert Lauk',
         style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
       ),
       const Spacer(flex: 2), // keeps the title centered with space for logout button
@@ -178,7 +178,7 @@ Expanded(
                   MaterialPageRoute(builder: (_) => ReportListScreen()),
                 );
               },
-              child: const Icon(Icons.map, color: Colors.deepPurple, size: 25),
+              child: const Icon(Icons.article, color: Colors.deepPurple, size: 25),
             ),
 
             const SizedBox(width: 20),
@@ -186,7 +186,7 @@ Expanded(
             // Center Report Incident button
             ElevatedButton.icon(
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.redAccent,
+                backgroundColor: Colors.white,
                 padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
               ),
               onPressed: () {

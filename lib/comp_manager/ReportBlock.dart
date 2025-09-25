@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-
-import 'package:flutter_application_1/comp_manager/MediaUploadMng.dart';
-import 'package:flutter_application_1/comp_manager/TextFileMng.dart';
 import 'package:flutter_application_1/report_pages/comment_section/comment_screen.dart';
 
 class ReportBlock extends StatelessWidget {
@@ -12,6 +9,7 @@ class ReportBlock extends StatelessWidget {
   final String status;
   final String location;
   final String time;
+  final String type; // added type field
 
   final commentCtrl = TextEditingController();
 
@@ -23,30 +21,51 @@ class ReportBlock extends StatelessWidget {
     required this.status,
     required this.location,
     required this.time,
+    required this.type, // pass type here
   });
 
   @override
   Widget build(BuildContext context) {
+    // Determine card color
+    Color cardColor;
+    if (status == 'Solved') {
+      cardColor = Colors.green.shade50;
+    } else if (status == 'Pending' && type == 'SOS') {
+      cardColor = Colors.red.shade100;
+    } else {
+      cardColor = Colors.yellow.shade100;
+    }
+
     return Padding(
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
       child: Container(
-        height: 300,
-        color: Colors.indigo,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
-              child: Row(
+        decoration: BoxDecoration(
+          color: cardColor, // dynamic color
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black12,
+              blurRadius: 6,
+              offset: Offset(0, 3),
+            ),
+          ],
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(12.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Title and Status
+              Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Expanded(
                     child: Text(
-                      "$title  ($reportId) ",
+                      "$reportId  ($title)",
                       style: const TextStyle(
-                        fontSize: 20.0,
+                        fontSize: 18.0,
                         fontWeight: FontWeight.bold,
-                        color: Colors.white,
+                        color: Colors.black87,
                       ),
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -55,74 +74,72 @@ class ReportBlock extends StatelessWidget {
                     "STATUS: $status",
                     style: const TextStyle(
                       fontSize: 14.0,
-                      color: Colors.white70,
+                      color: Colors.grey,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                 ],
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0),
-              child: SizedBox(
-                height: 140,
+              const SizedBox(height: 8),
+              // Description
+              Container(
+                constraints: BoxConstraints(maxHeight: 140),
                 child: SingleChildScrollView(
                   child: Text(
                     description,
-                    style: const TextStyle(fontSize: 16.0, color: Colors.white),
+                    style: const TextStyle(fontSize: 16.0, color: Colors.black87),
                   ),
                 ),
               ),
-            ),
-            const Spacer(),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12.0),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
+              const SizedBox(height: 12),
+              // Location and Date/Time
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  Text(
+                    location,
+                    style: const TextStyle(fontSize: 14.0, color: Colors.grey),
+                  ),
+                  Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       Text(
-                        location,
-                        style: const TextStyle(fontSize: 14.0, color: Colors.white70),
+                        date,
+                        style: const TextStyle(fontSize: 14.0, color: Colors.grey),
                       ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(
-                            date,
-                            style: const TextStyle(fontSize: 14.0, color: Colors.white70),
-                          ),
-                          Text(
-                            time,
-                            style: const TextStyle(fontSize: 14.0, color: Colors.white70),
-                          ),
-                        ],
+                      Text(
+                        time,
+                        style: const TextStyle(fontSize: 14.0, color: Colors.grey),
                       ),
                     ],
                   ),
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: IconButton(
-                      icon: const Icon(Icons.add_comment, color: Colors.white70),
-                      tooltip: 'View Comments',
-                      onPressed: () {
-                        debugPrint("Comment button pressed");
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => CommentScreen(reportId: reportId, title: title)),
-                        );
-                      },
-                    ),
-                  ),
                 ],
               ),
-            ),
-          ],
+              const SizedBox(height: 8),
+              // Buttons Row
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.add_comment, color: Colors.blueAccent),
+                    tooltip: 'View Comments',
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => CommentScreen(
+                            reportId: reportId,
+                            title: title,
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                  // Resolve button can be added here later
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );

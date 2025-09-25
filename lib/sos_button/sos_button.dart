@@ -127,18 +127,47 @@ class _SOSButtonState extends State<SOSButton> {
     }
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return ElevatedButton(
-      style: ElevatedButton.styleFrom(
-        backgroundColor: Colors.red,
-        minimumSize: const Size(150, 150),
-        shape: const CircleBorder(),
+@override
+Widget build(BuildContext context) {
+  return GestureDetector(
+    onTap: isSending ? null : _sendSOS,
+    child: Container(
+      width: 170,
+      height: 170,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        gradient: const LinearGradient(
+          colors: [Colors.redAccent, Colors.red],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.redAccent.withOpacity(0.6),
+            blurRadius: 20,
+            spreadRadius: 1,
+          ),
+        ],
       ),
-      onPressed: isSending ? null : _sendSOS,
+      alignment: Alignment.center,
       child: isSending
           ? const CircularProgressIndicator(color: Colors.white)
-          : const Text('SOS', style: TextStyle(fontSize: 24)),
-    );
-  }
+          : const Text(
+              'SOS',
+              style: TextStyle(
+                fontSize: 28,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+                shadows: [
+                  Shadow(
+                    offset: Offset(0, 0),
+                    blurRadius: 6,
+                    color: Colors.redAccent,
+                  ),
+                ],
+              ),
+            ),
+    ),
+  );
+}
 }
