@@ -14,10 +14,11 @@ class AdminHomePage extends StatefulWidget {
 
 class _AdminHomePageState extends State<AdminHomePage> {
   final reportsRef = FirebaseFirestore.instance.collection('reports');
+  final commentsRef = FirebaseFirestore.instance.collection('comments_reports');
 
   Future<void> openMap(GeoPoint point) async {
-    final url = 'https://www.google.com/maps/search/?api=1&query=${point.latitude},${point.longitude}';
-
+    final url =
+        'https://www.google.com/maps/search/?api=1&query=${point.latitude},${point.longitude}';
     try {
       if (kIsWeb) {
         js.context.callMethod('open', [url]);
@@ -40,6 +41,62 @@ class _AdminHomePageState extends State<AdminHomePage> {
 
   Future<void> signOut() async {
     await FirebaseAuth.instance.signOut();
+  }
+
+  void showComments(String reportId) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return StreamBuilder<DocumentSnapshot>(
+          stream: commentsRef.doc(reportId).snapshots(),
+          builder: (context, snapshot) {
+            if (!snapshot.hasData || !snapshot.data!.exists) {
+              return AlertDialog(
+                title: const Text("Comments"),
+                content: const Text("No comments yet."),
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: const Text("Close"),
+                  ),
+                ],
+              );
+            }
+
+            final commentData =
+                snapshot.data!.data() as Map<String, dynamic>?;
+
+            final comments =
+                List<String>.from(commentData?['Comments'] ?? []);
+
+            return AlertDialog(
+              title: const Text("Comments"),
+              content: SizedBox(
+                width: double.maxFinite,
+                child: comments.isEmpty
+                    ? const Text("No comments yet.")
+                    : ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: comments.length,
+                        itemBuilder: (context, index) {
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 2),
+                            child: Text("- ${comments[index]}"),
+                          );
+                        },
+                      ),
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text("Close"),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
   }
 
   @override
@@ -91,15 +148,17 @@ class _AdminHomePageState extends State<AdminHomePage> {
             itemCount: reports.length,
             itemBuilder: (context, index) {
               final report = reports[index];
-              final id = report.id;
+              final id = report['ID'] ?? report.id;
               final geoPoint = report['GeoPoint'] as GeoPoint?;
               final status = report['Status'] as String;
               final type = report['Type'] ?? '';
+              final details = report['Details'] ?? '';
+              final username = report['Username'] ?? '';
+              final location = report['Location'] ?? '';
 
-              // Colors based on type and status
               Color cardColor;
               if (status == 'Pending' && type == 'SOS') {
-                cardColor = Colors.redAccent.shade100; // bright red for SOS
+                cardColor = Colors.redAccent.shade100;
               } else if (status == 'Pending') {
                 cardColor = Colors.red.shade50;
               } else {
@@ -113,12 +172,13 @@ class _AdminHomePageState extends State<AdminHomePage> {
                 margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 child: ListTile(
                   title: Text(
-                    report['Details'] ?? '',
+                    "ID: $id",
                     style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                   subtitle: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      Text("Details: $details"),
                       Text("Type: $type"),
                       Row(
                         children: [
@@ -127,14 +187,14 @@ class _AdminHomePageState extends State<AdminHomePage> {
                               ? GestureDetector(
                                   onTap: () => openMap(geoPoint),
                                   child: Text(
-                                    "${report['Location'] ?? ''}",
+                                    "$location",
                                     style: const TextStyle(
                                       color: Colors.blue,
                                       decoration: TextDecoration.underline,
                                     ),
                                   ),
                                 )
-                              : Text("${report['Location'] ?? ''}"),
+                              : Text("$location"),
                         ],
                       ),
                       Text(
@@ -144,22 +204,33 @@ class _AdminHomePageState extends State<AdminHomePage> {
                           color: statusColor,
                         ),
                       ),
-                      Text("User: ${report['Username'] ?? ''}"),
+                      Text("User: $username"),
                     ],
                   ),
                   trailing: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
+                      // View comments button first (left)
+                      ElevatedButton.icon(
+                        onPressed: () => showComments(id),
+                        icon: const Icon(Icons.comment, color: Colors.white),
+                        label: const Text('View Comments'),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.blue,
+                          foregroundColor: Colors.white,
+                        ),
+                      ),
+                      const SizedBox(width: 4),
+                      // Resolve/Unresolve buttons
                       if (status == 'Pending')
                         ElevatedButton.icon(
                           onPressed: () async {
                             try {
-                              await reportsRef.doc(id).update({'Status': 'Solved'});
+                              await reportsRef.doc(report.id).update({'Status': 'Solved'});
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(content: Text('Marked as Resolved')),
                               );
                             } catch (e) {
-                              print('Error updating status: $e');
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(content: Text('Error: $e')),
                               );
@@ -176,12 +247,11 @@ class _AdminHomePageState extends State<AdminHomePage> {
                         ElevatedButton.icon(
                           onPressed: () async {
                             try {
-                              await reportsRef.doc(id).update({'Status': 'Pending'});
+                              await reportsRef.doc(report.id).update({'Status': 'Pending'});
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(content: Text('Marked as Unresolved')),
                               );
                             } catch (e) {
-                              print('Error updating status: $e');
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(content: Text('Error: $e')),
                               );

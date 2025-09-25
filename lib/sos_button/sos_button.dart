@@ -4,8 +4,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'dart:js' as js;
-import '../comp_manager/FetchLocation.dart';
-import '../comp_manager/TypeReportCounter.dart';
+import '../comp_manager/FetchMng/FetchLocation.dart';
+import '../comp_manager/WriteMng/TypeReportCounter.dart';
 
 class SOSButton extends StatefulWidget {
   const SOSButton({super.key});
