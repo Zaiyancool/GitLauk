@@ -63,7 +63,7 @@ class _ReportScreenState extends State<ReportScreen> {
           children: [
             DropdownButton<String>(
               value: category,
-              items: ["Suspicious", "Harassment", "Theft"].map((e) {
+              items: ["Suspicious", "Harassment", "Theft", "Other"].map((e) {
                 return DropdownMenuItem(value: e, child: Text(e));
               }).toList(),
               onChanged: (val) {

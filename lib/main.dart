@@ -6,6 +6,8 @@ import 'firebase_options.dart';
 import 'package:flutter_application_1/auth_pages/loginPage.dart';
 import 'package:flutter_application_1/auth_pages/singupPage.dart';
 import 'package:flutter_application_1/auth_pages/authPage.dart';
+import 'package:flutter_application_1/user_profiles/user_profiles_screen.dart';
+
 
 import 'package:flutter_application_1/comp_manager/TextFileMng.dart';
 import 'package:flutter_application_1/comp_manager/ButtonMng.dart';
@@ -92,15 +94,31 @@ class _HomeScreenState extends State<HomeScreen> {
   title: Row(
     children: [
       // Username on the left
-      Container(
-        constraints: BoxConstraints(
-          maxWidth: MediaQuery.of(context).size.width * 0.4,
-        ),
-        child: Text(
-          'Hello, $userName',
-          style: const TextStyle(fontSize: 14),
-          overflow: TextOverflow.ellipsis,
-        ),
+      Row(
+        children: [
+          IconButton(
+            onPressed: () {
+              debugPrint("UserProfile button pressed");
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => UserProfilesScreen()),
+              );
+            },
+            icon: Icon(Icons.account_circle_sharp, size: 30),
+          ),
+          const SizedBox(width: 8),
+ 
+          Container(
+            constraints: BoxConstraints(
+              maxWidth: MediaQuery.of(context).size.width * 0.4,
+            ),
+            child: Text(
+              'Hello, $userName',
+              style: const TextStyle(fontSize: 14),
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+        ],
       ),
       const Spacer(), // pushes the title to center
       const Text(
