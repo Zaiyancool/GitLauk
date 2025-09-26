@@ -112,10 +112,34 @@ class _HomeScreenState extends State<HomeScreen> {
             constraints: BoxConstraints(
               maxWidth: MediaQuery.of(context).size.width * 0.4,
             ),
-            child: Text(
-              'Hello, $userName',
-              style: const TextStyle(fontSize: 14),
-              overflow: TextOverflow.ellipsis,
+            child: StreamBuilder<DocumentSnapshot>(
+              stream: FirebaseFirestore.instance
+                  .collection('users')
+                  .doc(FirebaseAuth.instance.currentUser!.uid)
+                  .snapshots(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Text(
+                    'Hello, ...',
+                    style: TextStyle(fontSize: 14),
+                    overflow: TextOverflow.ellipsis,
+                  );
+                }
+                if (!snapshot.hasData || !snapshot.data!.exists) {
+                  return const Text(
+                    'Hello, User',
+                    style: TextStyle(fontSize: 14),
+                    overflow: TextOverflow.ellipsis,
+                  );
+                }
+                final userData = snapshot.data!.data() as Map<String, dynamic>;
+                final username = userData['name'] ?? 'User';
+                return Text(
+                  'Hello, $username',
+                  style: const TextStyle(fontSize: 14),
+                  overflow: TextOverflow.ellipsis,
+                );
+              },
             ),
           ),
         ],

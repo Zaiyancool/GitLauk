@@ -68,7 +68,7 @@ class ProfileBlock extends StatelessWidget {
                           child: const Text('Cancel'),
                         ),
                         TextButton(
-                          onPressed: () {
+                          onPressed: () async {
                             final newText = controller.text.trim();
                             if (newText.isNotEmpty) {
                               final editDetails = EditProfileDetails(
@@ -76,10 +76,26 @@ class ProfileBlock extends StatelessWidget {
                                 editText: newText,
                               );
 
-                              // Call your Firestore update logic here
-                              updateUserProfile(uid, editDetails); // Replace with actual user ID
+                              // Update Firestore
+                              await updateUserProfile(uid, editDetails);
 
-                              Navigator.pop(context);
+                                // Show confirmation
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text('$text updated successfully!'),
+                                    duration: const Duration(seconds: 2),
+                                  ),
+                                );
+
+
+                              Navigator.pop(context); // Close the AlertDialog
+
+                              // Navigate back to main menu
+                              Navigator.of(context).pop(); // assumes main menu is underneath in stack
+                              // OR if you want to force open main menu directly:
+                              // Navigator.of(context).pushReplacement(
+                              //   MaterialPageRoute(builder: (_) => MainMenuScreen())
+                              // );
                             }
                           },
                           child: const Text('Save'),

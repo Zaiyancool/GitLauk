@@ -24,7 +24,7 @@ class EditProfileDetails {
 
 Future<void> updateUserProfile(String userId, EditProfileDetails details) async {
   try {
-    final docRef = FirebaseFirestore.instance.collection('userProfile').doc(userId);
+    final docRef = FirebaseFirestore.instance.collection('users').doc(userId);
 
     await docRef.update({
       details.profileType: details.editText,
