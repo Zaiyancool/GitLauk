@@ -38,7 +38,8 @@ class CampusSafetyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.red,
       ),
-      home: AuthPage(),
+      home: AuthPage(), // Changed to authPage in auth_pages folder to handle auth state
+      debugShowCheckedModeBanner: false,
     );
   }
 }
