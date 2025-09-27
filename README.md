@@ -1,6 +1,8 @@
 # Alert Lauk
 by GitLauk
 
+Web app deployment link : https://zaiyancool.github.io/GitLauk/
+
 username: test123@gmail.com
 password: test123
 
