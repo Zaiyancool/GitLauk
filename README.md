@@ -12,3 +12,6 @@ admin password: admin123
 Track: Campus Management
 
 Problem: Current safety infrastructure often lacks comprehensive coverage, real-time responsiveness, and accessibility features that address the diverse needs of the campus community, leaving gaps in protection and support.
+
+
+Note: Our app is focused for USM students, thats why when you open the app, it will show the map at USM
