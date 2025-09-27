@@ -29,8 +29,8 @@ class _HeatmapScreenState extends State<HeatmapScreen> {
 
           return FlutterMap(
             options: MapOptions(
-              center: LatLng(5.3414, 100.2850),
-              zoom: 17.0,
+              center: LatLng(5.356739778819291, 100.30153036462309),
+              zoom: 15.5,
             ),
             children: [
               TileLayer(
@@ -52,8 +52,8 @@ class _HeatmapScreenState extends State<HeatmapScreen> {
                   final time = data['Time'] as Timestamp?;
 
                   return Marker(
-                    width: 40,
-                    height: 40,
+                    width: 30,
+                    height: 30,
                     point: point,
                     builder: (ctx) => GestureDetector(
                       onTap: () async {

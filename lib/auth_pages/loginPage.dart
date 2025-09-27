@@ -150,7 +150,7 @@ void wrongPassMessage(){
             
             children: [
               Text(
-                'Campus Safety',
+                'Alert Lauk',
                 style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
               ),
               SizedBox(height: 40),
