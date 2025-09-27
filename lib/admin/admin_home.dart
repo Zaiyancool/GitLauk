@@ -165,19 +165,26 @@ class _AdminHomePageState extends State<AdminHomePage> {
                 cardColor = Colors.green.shade50;
               }
 
-              final statusColor = status == 'Pending' ? Colors.red : Colors.green;
+              final statusColor =
+                  status == 'Pending' ? Colors.red : Colors.green;
 
               return Card(
                 color: cardColor,
-                margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                child: ListTile(
-                  title: Text(
-                    "ID: $id",
-                    style: const TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  subtitle: Column(
+                margin:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                child: Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      // Report Info
+                      Text(
+                        "ID: $id",
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
                       Text("Details: $details"),
                       Text("Type: $type"),
                       Row(
@@ -205,65 +212,81 @@ class _AdminHomePageState extends State<AdminHomePage> {
                         ),
                       ),
                       Text("User: $username"),
-                    ],
-                  ),
-                  trailing: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      // View comments button first (left)
-                      ElevatedButton.icon(
-                        onPressed: () => showComments(id),
-                        icon: const Icon(Icons.comment, color: Colors.white),
-                        label: const Text('View Comments'),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.blue,
-                          foregroundColor: Colors.white,
-                        ),
+                      const SizedBox(height: 8),
+
+                      // Responsive Buttons
+                      Wrap(
+                        spacing: 8,
+                        runSpacing: 8,
+                        children: [
+                          ElevatedButton.icon(
+                            onPressed: () => showComments(id),
+                            icon: const Icon(Icons.comment,
+                                color: Colors.white),
+                            label: const Text('View Comments'),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.blue,
+                              foregroundColor: Colors.white,
+                            ),
+                          ),
+                          if (status == 'Pending')
+                            ElevatedButton.icon(
+                              onPressed: () async {
+                                try {
+                                  await reportsRef
+                                      .doc(report.id)
+                                      .update({'Status': 'Solved'});
+                                  ScaffoldMessenger.of(context)
+                                      .showSnackBar(
+                                    const SnackBar(
+                                        content:
+                                            Text('Marked as Resolved')),
+                                  );
+                                } catch (e) {
+                                  ScaffoldMessenger.of(context)
+                                      .showSnackBar(
+                                    SnackBar(content: Text('Error: $e')),
+                                  );
+                                }
+                              },
+                              icon: const Icon(Icons.check,
+                                  color: Colors.white),
+                              label: const Text('Mark as Resolved'),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.green,
+                                foregroundColor: Colors.white,
+                              ),
+                            ),
+                          if (status == 'Solved')
+                            ElevatedButton.icon(
+                              onPressed: () async {
+                                try {
+                                  await reportsRef
+                                      .doc(report.id)
+                                      .update({'Status': 'Pending'});
+                                  ScaffoldMessenger.of(context)
+                                      .showSnackBar(
+                                    const SnackBar(
+                                        content:
+                                            Text('Marked as Unresolved')),
+                                  );
+                                } catch (e) {
+                                  ScaffoldMessenger.of(context)
+                                      .showSnackBar(
+                                    SnackBar(content: Text('Error: $e')),
+                                  );
+                                }
+                              },
+                              icon: const Icon(Icons.undo,
+                                  color: Colors.white),
+                              label: const Text('Mark as Unresolved'),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.red,
+                                foregroundColor: Colors.white,
+                              ),
+                            ),
+                        ],
                       ),
-                      const SizedBox(width: 4),
-                      // Resolve/Unresolve buttons
-                      if (status == 'Pending')
-                        ElevatedButton.icon(
-                          onPressed: () async {
-                            try {
-                              await reportsRef.doc(report.id).update({'Status': 'Solved'});
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(content: Text('Marked as Resolved')),
-                              );
-                            } catch (e) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text('Error: $e')),
-                              );
-                            }
-                          },
-                          icon: const Icon(Icons.check, color: Colors.white),
-                          label: const Text('Mark as Resolved'),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.green,
-                            foregroundColor: Colors.white,
-                          ),
-                        ),
-                      if (status == 'Solved')
-                        ElevatedButton.icon(
-                          onPressed: () async {
-                            try {
-                              await reportsRef.doc(report.id).update({'Status': 'Pending'});
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(content: Text('Marked as Unresolved')),
-                              );
-                            } catch (e) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text('Error: $e')),
-                              );
-                            }
-                          },
-                          icon: const Icon(Icons.undo, color: Colors.white),
-                          label: const Text('Mark as Unresolved'),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.red,
-                            foregroundColor: Colors.white,
-                          ),
-                        ),
                     ],
                   ),
                 ),
