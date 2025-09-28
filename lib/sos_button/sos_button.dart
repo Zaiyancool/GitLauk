@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'dart:js' as js;
+//import 'dart:js' as js;
 import '../comp_manager/FetchMng/FetchLocation.dart';
 import '../comp_manager/WriteMng/TypeReportCounter.dart';
 
@@ -105,27 +105,23 @@ class _SOSButtonState extends State<SOSButton> {
   }
 
   Future<void> _makeCall(String number) async {
-    final telUrl = 'tel:$number';
+  final telUrl = 'tel:$number';
 
-    try {
-      if (kIsWeb) {
-        js.context.callMethod('open', [telUrl]);
-      } else {
-        final uri = Uri.parse(telUrl);
-        if (await canLaunchUrl(uri)) {
-          await launchUrl(uri);
-        } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Could not launch phone app.')),
-          );
-        }
-      }
-    } catch (e) {
+  try {
+    final uri = Uri.parse(telUrl);
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error calling: $e')),
+        const SnackBar(content: Text('Could not launch phone app.')),
       );
     }
+  } catch (e) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Error calling: $e')),
+    );
   }
+}
 
 @override
 Widget build(BuildContext context) {

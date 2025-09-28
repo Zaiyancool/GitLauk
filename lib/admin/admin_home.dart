@@ -3,7 +3,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'dart:js' as js;
+//import 'dart:js' as js;
 
 class AdminHomePage extends StatefulWidget {
   const AdminHomePage({super.key});
@@ -17,27 +17,23 @@ class _AdminHomePageState extends State<AdminHomePage> {
   final commentsRef = FirebaseFirestore.instance.collection('comments_reports');
 
   Future<void> openMap(GeoPoint point) async {
-    final url =
-        'https://www.google.com/maps/search/?api=1&query=${point.latitude},${point.longitude}';
-    try {
-      if (kIsWeb) {
-        js.context.callMethod('open', [url]);
-      } else {
-        final uri = Uri.parse(url);
-        if (await canLaunchUrl(uri)) {
-          await launchUrl(uri, mode: LaunchMode.externalApplication);
-        } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Could not open map.')),
-          );
-        }
-      }
-    } catch (e) {
+  final url =
+      'https://www.google.com/maps/search/?api=1&query=${point.latitude},${point.longitude}';
+  try {
+    final uri = Uri.parse(url);
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error opening map: $e')),
+        const SnackBar(content: Text('Could not open map.')),
       );
     }
+  } catch (e) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Error opening map: $e')),
+    );
   }
+}
 
   Future<void> signOut() async {
     await FirebaseAuth.instance.signOut();
