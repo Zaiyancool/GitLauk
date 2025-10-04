@@ -3,8 +3,11 @@ by GitLauk
 
 Web app deployment link : https://zaiyancool.github.io/GitLauk/
 
+User guidline : https://tinyurl.com/GitLauk-AlertLaukUserGuidline
+
 username: test123@gmail.com
 password: test123
+(or can just signup for new account)
 
 admin username: admin@gmail.com
 admin password: admin123
