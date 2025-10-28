@@ -5,6 +5,8 @@ Web app deployment link : https://zaiyancool.github.io/GitLauk/
 
 User guidline : https://tinyurl.com/GitLauk-AlertLaukUserGuidline
 
+Documentation : https://docs.google.com/document/d/1CqfxXWVnaGqzfyQm1x41beScO6CBszO4eLKSipVOqE0/edit?usp=sharing
+
 username: test123@gmail.com
 password: test123
 (or can just signup for new account)
