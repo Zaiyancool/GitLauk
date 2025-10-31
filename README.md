@@ -19,4 +19,6 @@ Track: Campus Management
 Problem: Current safety infrastructure often lacks comprehensive coverage, real-time responsiveness, and accessibility features that address the diverse needs of the campus community, leaving gaps in protection and support.
 
 
-Note: Our app is focused for USM students, thats why when you open the app, it will show the map at USM
+Note: The app is configured with USM,Pulau Pinang as the default map viewport since the system is intended primarily for on-campus usage. When the application launches, the map automatically centers on the USM coordinates to ensure accurate interaction with location-based features such as the SOS alert and issue reporting modules.
+
+However, if the app is tested outside the USM area, the user’s current position may initially fall outside the visible viewport. In this case, testers can manually zoom out or reposition the map to visualize their location, as real-time geolocation retrieval still functions correctly regardless of the current map focus.
