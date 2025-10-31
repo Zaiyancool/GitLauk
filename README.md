@@ -14,11 +14,11 @@ password: test123
 admin username: admin@gmail.com
 admin password: admin123
 
-Track: Campus Management
+*Track:* Campus Management
 
-Problem: Current safety infrastructure often lacks comprehensive coverage, real-time responsiveness, and accessibility features that address the diverse needs of the campus community, leaving gaps in protection and support.
+*Problem:* Current safety infrastructure often lacks comprehensive coverage, real-time responsiveness, and accessibility features that address the diverse needs of the campus community, leaving gaps in protection and support.
+
+*Solution:* Our app prioritizes minimalism for maximum safety. The interface is intentionally stripped down to only essential features, ensuring ease of use even under pressure. The SOS button is designed as a large, high-visibility red button that covers nearly half of the screen, allowing one-tap emergency activation without searching through menus. Additionally, the app includes a clean real-time map view showing reported issues around campus. Users can submit reports and add context through comments, enabling clearer communication between students and campus staff. This minimalist approach eliminates distractions, improves reaction speed, and increases the effectiveness of every safety interaction.
 
 
-Note: The app is configured with USM,Pulau Pinang as the default map viewport since the system is intended primarily for on-campus usage. When the application launches, the map automatically centers on the USM coordinates to ensure accurate interaction with location-based features such as the SOS alert and issue reporting modules.
-
-However, if the app is tested outside the USM area, the user’s current position may initially fall outside the visible viewport. In this case, testers can manually zoom out or reposition the map to visualize their location, as real-time geolocation retrieval still functions correctly regardless of the current map focus.
+*Note:* The app is configured with USM,Pulau Pinang as the default map viewport since the system is intended primarily for on-campus usage. When the application launches, the map automatically centers on the USM coordinates to ensure accurate interaction with location-based features such as the SOS alert and issue reporting modules. However, if the app is tested outside the USM area, the user’s current position may initially fall outside the visible viewport. In this case, testers can manually zoom out or reposition the map to visualize their location, as real-time geolocation retrieval still functions correctly regardless of the current map focus.
