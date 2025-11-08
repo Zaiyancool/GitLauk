@@ -29,7 +29,7 @@ class _HeatmapScreenState extends State<HeatmapScreen> {
 
           return FlutterMap(
             options: MapOptions(
-              center: LatLng(5.356739778819291, 100.30153036462309),
+              center: LatLng(2.927962 , 101.642178),
               zoom: 15.5,
             ),
             children: [
