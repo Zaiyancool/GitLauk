@@ -9,7 +9,7 @@ import '../comp_manager/WriteMng/TypeReportCounter.dart';
 
 class SOSButton extends StatefulWidget {
   const SOSButton({super.key});
-
+  
   @override
   State<SOSButton> createState() => _SOSButtonState();
 }
